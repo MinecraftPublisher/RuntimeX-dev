@@ -1,7 +1,7 @@
 {
-  "name": "runtimex-development-build",
+  "name": "runtimex-dev",
   "version": "1.0.0",
-  "description": "The developement area for RuntimeX, after the developement is finished the code will be minified, comments will be removed, files will be packed together and will be published as the production build.",
+  "description": "RuntimeX Developement build. When a dev build is stable, comments will be removed, code will be minified and files will be packed into one, and will be pushed to the production build.",
   "main": "index.html",
   "scripts": {
     "start": "parcel index.html --open",

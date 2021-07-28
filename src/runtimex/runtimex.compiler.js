@@ -7,14 +7,7 @@
  *
  */
 
-const RuntimeCompiler = function (obj) {
-  if (typeof obj === "string") {
-    RuntimeCompiler.list.push(obj);
-  } else {
-    return "Error: given object is not a string.";
-  }
-};
-
+const RuntimeCompiler = {};
 // Declare all tools and variables we need for later use.
 RuntimeCompiler.threads = {};
 RuntimeCompiler.tools = {};
@@ -24,8 +17,8 @@ RuntimeCompiler.tools.checkConditions = function (line) {
     line.startsWith("CLASS") ||
     line.startsWith("WHILE") ||
     line.startsWith("FOR") ||
-    line.startsWith(":") ||
-    line.startsWith("")
+    line.startsWith("FOREACH") ||
+    line.startsWith(":")
   );
 };
 
@@ -44,7 +37,7 @@ RuntimeCompiler.craftThread = function (name, data) {
 };
 
 // This is the function that handles most of the compilation and interpretation, etc.
-RuntimeCompiler.compile = function (obj) {
+RuntimeCompiler.compile = function (obj, nested) {
   if (typeof obj === "string") {
     // Declare a random number to not to break nests. ThreadID makes sure that no variables and shit gets messed up in the middle of the job.
     var ID = Math.floor(Math.random() * 10000);
@@ -58,16 +51,29 @@ RuntimeCompiler.compile = function (obj) {
     // Split the input into an array of lines.
     RuntimeCompiler.threads[ID].input = obj.split("\n");
 
-    // Loop over the lines
-    RuntimeCompiler.threads[ID].input.forEach((line, index, array) => {
-      // Ignore line if it's a comment.
-      if (line.startsWith("#")) {
-        return;
-      }
-      // Check if the line contains any loops/conditions/etc and return them in a recursive function. We also need to check if it's the first line, because we may create an infinite loop.
-      if (index > 0 && RuntimeCompiler.tools.checkConditions()) {
-      }
-    });
+    // Check if the compiler is ran as nested, and if it is, return a thread.
+    if (
+      RuntimeCompiler.tools.checkConditions(
+        RuntimeCompiler.threads[ID].input[0]
+      ) &&
+      nested
+    ) {
+      var toReturn = RuntimeCompiler.craftThread("nested-thread", {});
+    } else {
+      // Loop over the lines
+      RuntimeCompiler.threads[ID].input.forEach((line, index, array) => {
+        // Ignore line if it's a comment.
+        if (line.startsWith("#")) {
+          return;
+        }
+        // Check if the line contains any loops/conditions/etc and return them in a recursive function. We also need to check if it's the first line, because we may create an infinite loop.
+        if (index > 0 && RuntimeCompiler.tools.checkConditions(line)) {
+          RuntimeCompiler.threads[ID].result.children.push(
+            RuntimeCompiler.compile(obj, true)
+          );
+        }
+      });
+    }
   } else {
     console.log("Error: given object is not a string.");
   }
