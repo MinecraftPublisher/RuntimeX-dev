@@ -22,6 +22,8 @@ RuntimeCompiler.tools.checkConditions = function (line) {
   return (
     line.startsWith("IF") ||
     line.startsWith("CLASS") ||
+    line.startsWith("WHILE") ||
+    line.startsWith("FOR") ||
     line.startsWith(":") ||
     line.startsWith("")
   );
