@@ -1,0 +1,20 @@
+{
+  "name": "runtimex-development-build",
+  "version": "1.0.0",
+  "description": "The developement area for RuntimeX, after the developement is finished the code will be minified, comments will be removed, files will be packed together and will be published as the production build.",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "parcel-bundler": "^1.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.2.0"
+  },
+  "resolutions": {
+    "@babel/preset-env": "7.13.8"
+  },
+  "keywords": []
+}
