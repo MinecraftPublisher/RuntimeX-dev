@@ -49,7 +49,9 @@ RuntimeCompiler.compile = function (obj, nested) {
     // Declare the result data and craft a main thread for the current ThreadID to store the tokens inside.
     RuntimeCompiler.threads[ID].result = {
       name: "main",
-      description: nested ? "A nested main thread." : "The main thread for RuntimeTokens",
+      description: nested
+        ? "A nested main thread."
+        : "The main thread for RuntimeTokens",
       children: []
     };
 
@@ -67,11 +69,17 @@ RuntimeCompiler.compile = function (obj, nested) {
       switch (line) {
         case line.startsWith("IF "):
           break;
-        case line.startsWith("CLASS") || line.startsWith("FOR") || line.startsWith("FOREACH") || line.startsWith("WHILE"):
-            break;
+        case line.startsWith(":"):
+          break;
+        case line.startsWith("CLASS") ||
+          line.startsWith("FOR") ||
+          line.startsWith("FOREACH") ||
+          line.startsWith("WHILE"):
+          break;
         default:
           console.log(
-            "Error: incorrect nested case detected, did you run element as nested?"
+            "Error: incorrect nested case detected, did you run element as nested manually? " +
+              RuntimeCompiler.threads[ID].input[0]
           );
           break;
       }
